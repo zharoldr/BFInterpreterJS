@@ -12,9 +12,9 @@ function interpret(text) {
 
     for (var i = 0; i < text.length; i++) {
         if (performance.now() - startTime > 1000) {
+            console.log("STOPPING");
             break;
         }
-        console.log(i);
         switch (text[i]) {
             case '>': {
                 cur_idx += 1;
