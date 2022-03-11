@@ -1,0 +1,46 @@
+body {
+    background-color: rgb(194, 194, 194);
+}
+
+textarea {
+    width: 100%;
+}
+
+.side-by-side {
+    padding: 1%;
+}
+
+.bf {
+    width: 48%;
+    float: left;
+    display: block;
+    text-align: center;
+}
+
+.log {
+    width: 48%;
+    float: right;
+    display: block;
+    text-align: center;
+}
+
+.mem {
+    width: 48%;
+    float: right;
+    display: block;
+    text-align: center;
+}
+
+.bf textarea {
+    font-size: 20px;
+}
+
+.log textarea {
+    font-size: 20px;
+}
+
+
+.mem textarea {
+    font-size: 20px;
+}
+
