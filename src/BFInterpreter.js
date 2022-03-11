@@ -131,9 +131,34 @@ function interpret(text) {
                 output += String.fromCharCode(tape[cur_idx]);
                 break;
             }
-            default: break;
+            default: {
+                if(right_count != 0) {
+                    cur_idx += right_count;
+                } else if(left_count != 0) {
+                    cur_idx -= left_count;
+                } else if (plus_count != 0) {
+                    tape[cur_idx] += plus_count;
+                } else if(minus_count != 0) {
+                    tape[cur_idx] -= minus_count;
+                }
+                right_count = 0; left_count = 0;
+                plus_count = 0; minus_count = 0;
+                break;
+            }
         }
     }
+
+    if(right_count != 0) {
+        cur_idx += right_count;
+    } else if(left_count != 0) {
+        cur_idx -= left_count;
+    } else if (plus_count != 0) {
+        tape[cur_idx] += plus_count;
+    } else if(minus_count != 0) {
+        tape[cur_idx] -= minus_count;
+    }
+    right_count = 0; left_count = 0;
+    plus_count = 0; minus_count = 0;
 
 
     var new_text = "";
