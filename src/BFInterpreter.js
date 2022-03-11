@@ -1,5 +1,3 @@
-// ++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.
-
 function interpret(text) {
 
     var tape = Array(0xffff).fill(0);
@@ -13,7 +11,7 @@ function interpret(text) {
     var startTime = performance.now();
 
     for (var i = 0; i < text.length; i++) {
-        if (performance.now() - startTime > 100) {
+        if (performance.now() - startTime > 1000) {
             break;
         }
         console.log(i);
