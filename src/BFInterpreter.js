@@ -4,11 +4,16 @@ function interpret(text) {
 
     var stack = [];
 
-    var log = [];
+    var output = [];
 
     var cur_idx = 0;
 
     var startTime = performance.now();
+
+    var left_count  = 0;
+    var right_count = 0;
+    var plus_count  = 0;
+    var minus_count = 0;
 
     for (var i = 0; i < text.length; i++) {
         if (performance.now() - startTime > 1000) {
@@ -17,32 +22,80 @@ function interpret(text) {
         }
         switch (text[i]) {
             case '>': {
-                cur_idx += 1;
+                if(left_count != 0) {
+                    cur_idx -= left_count;
+                } else if(plus_count != 0) {
+                    tape[cur_idx] += plus_count;
+                } else if(minus_count != 0) {
+                    tape[cur_idx] -= minus_count;
+                }
+                right_count++; left_count = 0;
+                plus_count = 0; minus_count = 0;
                 break;
             }
             case '<': {
-                cur_idx -= 1;
+                if(right_count != 0) {
+                    cur_idx += left_count;
+                } else if(plus_count != 0) {
+                    tape[cur_idx] += plus_count;
+                } else if(minus_count != 0) {
+                    tape[cur_idx] -= minus_count;
+                }
+                right_count = 0; left_count++;
+                plus_count = 0; minus_count = 0;
                 break;
             }
             case '+': {
-                tape[cur_idx] += 1;
-                if (tape[cur_idx] == 256) {
-                    tape[cur_idx] = 0;
+                if(right_count != 0) {
+                    cur_idx += right_count;
+                } else if(left_count != 0) {
+                    cur_idx -= left_count;
+                } else if(minus_count != 0) {
+                    tape[cur_idx] -= minus_count;
                 }
+                right_count = 0; left_count = 0;
+                plus_count++; minus_count = 0;
                 break;
             }
             case '-': {
-                tape[cur_idx] -= 1;
-                if (tape[cur_idx] < 0) {
-                    tape[cur_idx] = 255;
+                if(right_count != 0) {
+                    cur_idx += right_count;
+                } else if(left_count != 0) {
+                    cur_idx -= left_count;
+                } else if(plus_count != 0) {
+                    tape[cur_idx] += plus_count;
                 }
+                right_count = 0; left_count = 0;
+                plus_count = 0; minus_count++;
                 break;
             }
             case '[': {
+                if(right_count != 0) {
+                    cur_idx += right_count;
+                } else if(left_count != 0) {
+                    cur_idx -= left_count;
+                } else if (plus_count != 0) {
+                    tape[cur_idx] += plus_count;
+                } else if(minus_count != 0) {
+                    tape[cur_idx] -= minus_count;
+                }
+                right_count = 0; left_count = 0;
+                plus_count = 0; minus_count = 0;
                 stack.push(i);
                 break;
             }
             case ']': {
+                if(right_count != 0) {
+                    cur_idx += right_count;
+                } else if(left_count != 0) {
+                    cur_idx -= left_count;
+                } else if (plus_count != 0) {
+                    tape[cur_idx] += plus_count;
+                } else if(minus_count != 0) {
+                    tape[cur_idx] -= minus_count;
+                }
+                right_count = 0; left_count = 0;
+                plus_count = 0; minus_count = 0;
                 back = stack.pop();
                 if (tape[cur_idx] != 0) {
                     i = back-1;
@@ -50,10 +103,32 @@ function interpret(text) {
                 break;
             }
             case ',': {
+                if(right_count != 0) {
+                    cur_idx += right_count;
+                } else if(left_count != 0) {
+                    cur_idx -= left_count;
+                } else if (plus_count != 0) {
+                    tape[cur_idx] += plus_count;
+                } else if(minus_count != 0) {
+                    tape[cur_idx] -= minus_count;
+                }
+                right_count = 0; left_count = 0;
+                plus_count = 0; minus_count = 0;
                 break;
             }
             case '.': {
-                log += String.fromCharCode(tape[cur_idx]);
+                if(right_count != 0) {
+                    cur_idx += right_count;
+                } else if(left_count != 0) {
+                    cur_idx -= left_count;
+                } else if (plus_count != 0) {
+                    tape[cur_idx] += plus_count;
+                } else if(minus_count != 0) {
+                    tape[cur_idx] -= minus_count;
+                }
+                right_count = 0; left_count = 0;
+                plus_count = 0; minus_count = 0;
+                output += String.fromCharCode(tape[cur_idx]);
                 break;
             }
             default: break;
@@ -69,7 +144,7 @@ function interpret(text) {
         new_text += tape[i].toString(16).padStart(2, '0') + ' ';
     }
 
-    document.getElementById("log").value = log;
+    document.getElementById("output").value = output;
     document.getElementById("mem").value = new_text;
 
 }

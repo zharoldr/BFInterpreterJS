@@ -17,7 +17,7 @@ textarea {
     text-align: center;
 }
 
-.log {
+.output {
     width: 48%;
     float: right;
     display: block;
@@ -35,7 +35,7 @@ textarea {
     font-size: 20px;
 }
 
-.log textarea {
+.output textarea {
     font-size: 20px;
 }
 
