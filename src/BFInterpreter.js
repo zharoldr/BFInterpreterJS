@@ -1,6 +1,6 @@
 function genJS(text) {
 
-    var JSCode = "function exec(){var a = new Uint8Array(0xffff).fill(0); var p = 0; var o=\"\";";
+    var JSCode = "var a = new Uint8Array(0xffff).fill(0); var p = 0; var o=\"\";";
 
     var left_count  = 0;
     var right_count = 0;
@@ -111,7 +111,7 @@ function genJS(text) {
                 } else if(minus_count != 0) {
                     JSCode += "a[p]-="+minus_count+";"
                 }
-                JSCode += "o += a[p];";
+                JSCode += "o += String.fromCharCode(a[p]);";
                 right_count = 0; left_count = 0;
                 plus_count = 0; minus_count = 0;
                 break;
@@ -145,28 +145,22 @@ function genJS(text) {
     right_count = 0; left_count = 0;
     plus_count = 0; minus_count = 0;
 
-    JSCode += "var mem_log = \"\";for (var i = 0; i < 0xffff; i++) {if (i % 12 == 0) {mem_log += '\\n';}mem_log += a[i].toString(16).padStart(2, '0') + ' ';}return mem_log, o}";
-
-    console.log(JSCode);
+    JSCode += "var mem_log = \"\";for (var i = 0; i < 0xffff; i++) {if (i % 12 == 0) {mem_log += '\\n';}mem_log += a[i].toString(16).padStart(2, '0') + ' ';} return [o, mem_log];";
 
     return JSCode;
 }
 
 document.getElementById("bf").value = "++++++++[>++++++++>++++++++<<-]>++.++++.+++.<++++++[>++++++<-]>+.++++++.>>++++++[>++++++<-]>[-<<+>>]<<+[>+>+<<-]>.+++++++++++++.--.++.>.<++.>.<--.>[-]++++[>++[>+++++<-]<-]>>[-<<<->>>]<<<.+++++++++.<+++++[<<++>>-]<<.>>>>++++[>++++[>++<-]<-]>>...>++++[>++++<-]>[-<<<<<->>>>>]<<<<<.<<--.-------------.>>[-]<<[->+>+<<]>----.>+++++++++++++++.<++++.-.<<.>>>>>>......<<++++++++[>++++++++>++++++++<<-]>++.<<+++++.<<<.>++++++++[>>>++[>>>++<<<-]<<<-]>>>>>>.<<<<<----------.>>>>+.[->>+>+<<<]>>++.<<<<++++[<---->-]<-.-------.>++++[<++++>-]<+.+++++++.>>>>.<++++[-<++++>]<.>++++[->>++++<<]>>++.--.."
-// document.getElementById("bf").value = "+>[-]<[->>+<<]>>[-<+<+>>][-]<<[->>>>>+<<<<<]>>>>>[-<<+<<<+>>>>>][-]<<<<[->>>>+<<<<]>>>>[-<+<<<+>>>>][-]<<<[-]>[-<+>]>[-<<+>>]<[-]>[-]<<<[->>>>>+<<<<<]>>>>>[-<<+<<<+>>>>>][-]<<<<[->>>>+<<<<]>>>>[-<+<<<+>>>>][-]<<<[-]>[-<+>]>[-<<+>>]<[-]>[-]<<<[->>>>>+<<<<<]>>>>>[-<<+<<<+>>>>>][-]<<<<[->>>>+<<<<]>>>>[-<+<<<+>>>>][-]<<<[-]>[-<+>]>[-<<+>>]<[-]>[-]<<<[->>>>>+<<<<<]>>>>>[-<<+<<<+>>>>>][-]<<<<[->>>>+<<<<]>>>>[-<+<<<+>>>>][-]<<<[-]>[-<+>]>[-<<+>>]<[-]>[-]<<<[->>>>>+<<<<<]>>>>>[-<<+<<<+>>>>>][-]<<<<[->>>>+<<<<]>>>>[-<+<<<+>>>>][-]<<<[-]>[-<+>]>[-<<+>>]<[-]>[-]<<<[->>>>>+<<<<<]>>>>>[-<<+<<<+>>>>>][-]<<<<[->>>>+<<<<]>>>>[-<+<<<+>>>>][-]<<<[-]>[-<+>]>[-<<+>>]<[-]>[-]<<<[->>>>>+<<<<<]>>>>>[-<<+<<<+>>>>>][-]<<<<[->>>>+<<<<]>>>>[-<+<<<+>>>>][-]<<<[-]>[-<+>]>[-<<+>>]<[-]>[-]<<<[->>>>>+<<<<<]>>>>>[-<<+<<<+>>>>>][-]<<<<[->>>>+<<<<]>>>>[-<+<<<+>>>>][-]<<<[-]>[-<+>]>[-<<+>>]<[-]>[-]<<<[->>>>>+<<<<<]>>>>>[-<<+<<<+>>>>>][-]<<<<[->>>>+<<<<]>>>>[-<+<<<+>>>>][-]<<<[-]>[-<+>]>[-<<+>>]<[-]>[-]<<<[->>>>>+<<<<<]>>>>>[-<<+<<<+>>>>>][-]<<<<[->>>>+<<<<]>>>>[-<+<<<+>>>>][-]<<<[-]>[-<+>]>[-<<+>>]<[-]>[-]<<<[->>>>>+<<<<<]>>>>>[-<<+<<<+>>>>>][-]<<<<[->>>>+<<<<]>>>>[-<+<<<+>>>>][-]<<<[-]>[-<+>]>[-<<+>>]<[-]>[-]<<"
-genJS(document.getElementById("bf").value)
-var mem_log, o = JSExec();
-document.getElementById("mem").value = mem_log;
-document.getElementById("output").value = o;
+
+var reval = Function(genJS(document.getElementById("bf").value));
+
+document.getElementById("mem").value = reval()[1];
+document.getElementById("output").value = reval()[0];
 
 document.getElementById("bf").oninput = function() {
-    var text = document.getElementById("bf").value;
-    var JSExec = Function(genJS(text));
 
-    mem_log, o = JSExec();
+    reval = Function(genJS(document.getElementById("bf").value));
 
-    console.log("-->"+o);
-
-    document.getElementById("mem").value = mem_log;
-    document.getElementById("output").value = o;
+    document.getElementById("mem").value = reval()[1];
+    document.getElementById("output").value = reval()[0];
 }
