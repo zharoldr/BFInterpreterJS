@@ -1,11 +1,13 @@
 function genJS(text) {
 
-    var JSCode = "var a = new Uint8Array(0xffff).fill(0); var p = 0; var o=\"\";";
+    var JSCode = "var st = Date.now(); var dt = 0; var a = new Uint8Array(0xffff).fill(0); var p = 0; var o=\"\";";
 
     var left_count  = 0;
     var right_count = 0;
     var plus_count  = 0;
     var minus_count = 0;
+
+    var brace_count = 0;
 
     for (var i = 0; i < text.length; i++) {
         switch (text[i]) {
@@ -67,9 +69,10 @@ function genJS(text) {
                 } else if(minus_count != 0) {
                     JSCode += "a[p]-="+minus_count+";"
                 }
-                JSCode += "while (a[p] != 0) {";
+                JSCode += "while (a[p] != 0) {dt = Date.now() - st; if (dt > "+document.getElementById("timeout").value+") {o = \"Timed out!\"; break;}";
                 right_count = 0; left_count = 0;
                 plus_count = 0; minus_count = 0;
+                brace_count++;
                 break;
             }
             case ']': {
@@ -85,6 +88,10 @@ function genJS(text) {
                 JSCode += "}";
                 right_count = 0; left_count = 0;
                 plus_count = 0; minus_count = 0;
+                brace_count--;
+                if (brace_count < 0) {
+                    return false;
+                }
                 break;
             }
             case ',': {
@@ -147,7 +154,7 @@ function genJS(text) {
 
     JSCode += "var mem_log = \"\";for (var i = 0; i < 0xffff; i++) {if (i % 12 == 0) {mem_log += '\\n';}mem_log += a[i].toString(16).padStart(2, '0') + ' ';} return [o, mem_log];";
 
-    return JSCode;
+    return (brace_count == 0) ? JSCode : "return false;";
 }
 
 document.getElementById("bf").value = "++++++++[>++++++++>++++++++<<-]>++.++++.+++.<++++++[>++++++<-]>+.++++++.>>++++++[>++++++<-]>[-<<+>>]<<+[>+>+<<-]>.+++++++++++++.--.++.>.<++.>.<--.>[-]++++[>++[>+++++<-]<-]>>[-<<<->>>]<<<.+++++++++.<+++++[<<++>>-]<<.>>>>++++[>++++[>++<-]<-]>>...>++++[>++++<-]>[-<<<<<->>>>>]<<<<<.<<--.-------------.>>[-]<<[->+>+<<]>----.>+++++++++++++++.<++++.-.<<.>>>>>>......<<++++++++[>++++++++>++++++++<<-]>++.<<+++++.<<<.>++++++++[>>>++[>>>++<<<-]<<<-]>>>>>>.<<<<<----------.>>>>+.[->>+>+<<<]>>++.<<<<++++[<---->-]<-.-------.>++++[<++++>-]<+.+++++++.>>>>.<++++[-<++++>]<.>++++[->>++++<<]>>++.--.."
@@ -161,6 +168,12 @@ document.getElementById("bf").oninput = function() {
 
     reval = Function(genJS(document.getElementById("bf").value));
 
-    document.getElementById("mem").value = reval()[1];
-    document.getElementById("output").value = reval()[0];
+    var ans = reval();
+
+    if (ans) {
+        document.getElementById("mem").value = ans[1];
+        document.getElementById("output").value = ans[0];
+    } else {
+        document.getElementById("output").value = "Brace Mismatch";
+    }
 }

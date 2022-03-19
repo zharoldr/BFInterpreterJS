@@ -10,6 +10,15 @@ textarea {
     padding: 1%;
 }
 
+.side-by-side .timeout {
+    padding: 1%;
+    font-size: 20px;
+}
+
+.side-by-side .timeout input {
+    width: 100px;
+}
+
 .bf {
     width: 48%;
     float: left;

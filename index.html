@@ -10,14 +10,14 @@
 <body>
     <div class="side-by-side">
         <div class="top-to-bottom">
-            <div class="side-by-side">
-                <button id="run-button">Run</button>
-                <button id="kill-button">Kill</button>
+            <div class="timeout">
+                <label>Timout after <input id="timeout" type="deimal" value="200" min="1">milliseconds.</label>
             </div>
             <div class="bf">
                 <textarea id="bf" rows="36"></textarea>
             </div>
         </div>
+        
         <div class="top-to-bottom">
             <div class="output">
                 <textarea disabled id="output" rows="4"></textarea>
