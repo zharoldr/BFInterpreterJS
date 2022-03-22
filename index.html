@@ -8,17 +8,24 @@
     <title>BFInterpreterJS</title>
 </head>
 <body>
-    <div class="side-by-side">
-        <div class="top-to-bottom">
+    <div class="container">
+        <div class="column">
             <div class="timeout">
-                <label>Timout after <input id="timeout" type="deimal" value="200" min="1">milliseconds.</label>
+                <label>Timout after <input id="timeout" type="deimal" value="50" min="1">milliseconds.</label>
             </div>
             <div class="bf">
                 <textarea id="bf" rows="36"></textarea>
             </div>
         </div>
-        
-        <div class="top-to-bottom">
+        <div class="column">
+            <div class="download">
+                <input type="button" id="download" value="Download C++ Source">
+            </div>
+            <div class="code">
+                <textarea disabled id="cpp" rows="32"></textarea>
+            </div>
+        </div>
+        <div class="column">
             <div class="output">
                 <textarea disabled id="output" rows="4"></textarea>
             </div>
