@@ -1,4 +1,4 @@
 # BFinterpreterJS
-JS BrainF**K Interpreter
+JS BrainF\*\*k Interpreter
 
-Play with the current version [here](https://zharoldr.github.io/BFInterpreterJS/)!
+Play with it [here](https://zharoldr.github.io/BFInterpreterJS/)!
