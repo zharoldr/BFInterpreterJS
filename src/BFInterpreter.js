@@ -231,7 +231,9 @@ document.getElementById("cpp").value = code[1];
 document.getElementById("mem").value = jsfunc()[1];
 document.getElementById("output").value = jsfunc()[0];
 
-document.getElementById("download").onclick = download(code[1]);
+document.getElementById("download-button").addEventListener("click", function(){
+    download(code[1]);
+}, false);
 
 document.getElementById("bf").oninput = function() {
 
